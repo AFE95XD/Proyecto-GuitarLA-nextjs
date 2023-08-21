@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 export default function Header() {
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
   return (
     <header className={styles.header}>
       <div className={`contenedor ${styles.barra}`}>
