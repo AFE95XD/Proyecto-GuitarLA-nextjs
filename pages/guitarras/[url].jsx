@@ -3,12 +3,38 @@
 import Image from "next/image";
 import styles from "../../styles/guitarras.module.css";
 import Layout from "../../components/layout";
+import { useState } from "react";
 
-export default function Producto({ guitarra }) {
+export default function Producto({ guitarra, agregarCarrito }) {
   //   const router = useRouter();
   //   console.log(router.query);
   // console.log(guitarra[0].attributes.nombre);
+  const [cantidad, setCantidad] = useState(0);
   const { nombre, descripcion, imagen, precio } = guitarra[0].attributes;
+
+  // console.log(Number(cantidad));
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (cantidad < 1) {
+      alert("cantidad no valida");
+      return;
+    }
+    // console.log("paso validacion");
+
+    // Construir un objeto
+    const guitarraSeleccionada = {
+      id: guitarra[0].id,
+      imagen: imagen.data.attributes.url,
+      nombre,
+      precio,
+      cantidad,
+    };
+
+    // Pasando la información
+    agregarCarrito(guitarraSeleccionada);
+  };
+
   return (
     <Layout title={`Guitarra ${nombre}`}>
       <div className={styles.guitarra}>
@@ -23,9 +49,9 @@ export default function Producto({ guitarra }) {
           <p className={styles.descripcion}>{descripcion}</p>
           <p className={styles.precio}>${precio}</p>
 
-          <form className={styles.formulario}>
+          <form className={styles.formulario} onSubmit={handleSubmit}>
             <label htmlFor="cantidad">Cantidad:</label>
-            <select id="cantidad">
+            <select id="cantidad" onChange={(e) => setCantidad(e.target.value)}>
               <option value="0">-- Seleccione --</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -53,7 +79,7 @@ export async function getStaticPaths() {
     },
   }));
 
-  console.log(paths);
+  // console.log(paths);
 
   return {
     paths,
@@ -67,7 +93,7 @@ export async function getStaticProps({ params: { url } }) {
     `${process.env.API_URL}/gitarras?filters[url]=${url}&populate=imagen`
   );
   const { data: guitarra } = await respuesta.json();
-  console.log(guitarra);
+  // console.log(guitarra);
 
   return {
     props: { guitarra },

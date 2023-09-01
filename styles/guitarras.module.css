@@ -78,6 +78,8 @@
     padding: 1.4rem;
     background-color: var(--black);
     color: var(--white);
+    transition-property: background-color;
+    transition-duration: 300ms;
 }
 
 .formulario input[type="submit"]:hover {
